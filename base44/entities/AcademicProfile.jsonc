@@ -1,0 +1,32 @@
+{
+  "name": "AcademicProfile",
+  "type": "object",
+  "properties": {
+    "full_name": {"type": "string", "description": "Display name for the student"},
+    "institution_id": {"type": "string", "description": "Authoritative reference to the Institution entity."},
+    "catalog_id": {"type": "string"},
+    "program_id": {"type": "string"},
+    "institution": {"type": "string"},
+    "degree_type": {"type": "string"},
+    "major": {"type": "string"},
+    "minor": {"type": "string"},
+    "catalog_year": {"type": "string"},
+    "degree_start_year": {"type": "string"},
+    "academic_year": {"type": "string"},
+    "current_term": {"type": "string"},
+    "academic_status": {"type": "string"},
+    "credits_completed": {"type": "number"},
+    "credits_required": {"type": "number"},
+    "gpa": {"type": "number"},
+    "expected_graduation": {"type": "string"},
+    "graduation_status": {"type": "string"},
+    "manual_mode": {"type": "boolean", "default": false},
+    "onboarding_complete": {"type": "boolean", "default": false}
+  },
+  "required": ["institution"],
+  "rls": {
+    "read": {"created_by_id": "{{user.id}}"},
+    "update": {"created_by_id": "{{user.id}}"},
+    "delete": {"created_by_id": "{{user.id}}"}
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "Catalog",
+  "type": "object",
+  "properties": {
+    "institution_id": {"type": "string"},
+    "catalog_year": {"type": "string"},
+    "source_url": {"type": "string"},
+    "verification_status": {"type": "string", "enum": ["verified", "pending", "rejected"], "default": "pending"},
+    "last_verified": {"type": "string", "format": "date"},
+    "active": {"type": "boolean", "default": true}
+  },
+  "required": ["institution_id", "catalog_year", "verification_status"],
+  "rls": {
+    "read": {"$or": [{"data.verification_status": "verified"}, {"user_condition": {"role": "admin"}}]},
+    "create": {"user_condition": {"role": "admin"}},
+    "update": {"user_condition": {"role": "admin"}},
+    "delete": {"user_condition": {"role": "admin"}}
+  }
+}
