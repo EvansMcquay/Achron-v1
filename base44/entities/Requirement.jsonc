@@ -1,0 +1,117 @@
+{
+  "name": "Requirement",
+  "type": "object",
+  "properties": {
+    "program_id": {
+      "type": "string",
+      "description": "Reference to the Program this requirement belongs to (denormalized for queries)"
+    },
+    "group_id": {
+      "type": "string",
+      "description": "Reference to the RequirementGroup this requirement belongs to"
+    },
+    "requirement_type": {
+      "type": "string",
+      "enum": [
+        "required_course",
+        "choose_x_of_y",
+        "min_credits",
+        "elective_credits",
+        "concentration"
+      ],
+      "default": "required_course",
+      "description": "How this requirement is EVALUATED by the degree engine. required_course = complete a specific course; choose_x_of_y = complete N of the listed course_codes; min_credits = earn N credits from the listed course_codes (or N credits at a level when level_min/level_max set and course_codes empty); elective_credits = earn N credits from any completed course; concentration = complete the listed course set. The semantic type (business_elective/advanced_course/etc.) is preserved separately in normalized_type."
+    },
+    "course_codes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Course codes relevant to this requirement. required_course: [the one code]; choose_x_of_y: the Y options; min_credits/elective_credits: qualifying course list (empty = any completed course, or level-filtered when level_min/level_max set)."
+    },
+    "choose_count": {
+      "type": "number",
+      "description": "For choose_x_of_y: how many of course_codes must be completed. For concentration: how many of the listed course set (0/omitted = all)."
+    },
+    "min_credits": {
+      "type": "number",
+      "description": "For min_credits/elective_credits: the credit threshold that must be earned."
+    },
+    "level_min": {
+      "type": "number",
+      "description": "For level-based credit requirements (e.g. '12 credits of 300/400-level coursework'): minimum course level. The engine filters eligible completed courses by course_level >= level_min."
+    },
+    "level_max": {
+      "type": "number",
+      "description": "For level-based credit requirements: maximum course level. The engine filters eligible completed courses by course_level <= level_max."
+    },
+    "normalized_type": {
+      "type": "string",
+      "description": "Semantic requirement type for display, preserved from the official wording: business_elective | advanced_course | upper_level | major_elective | free_elective | general_education | major_requirement | required_course | concentration | prerequisite | other. Never replaces the engine's requirement_type."
+    },
+    "official_requirement_name": {
+      "type": "string",
+      "description": "The requirement's exact wording as published by the school (e.g. '300\u2013400 Level Business Electives'). Never normalized to a generic name."
+    },
+    "subject_area": {
+      "type": "string",
+      "description": "Subject/discipline area for this requirement when stated (e.g. 'Business', 'Information Systems')."
+    },
+    "min_grade": {
+      "type": "string",
+      "description": "Minimum grade for this requirement's courses e.g. C. Overrides the group's min_grade."
+    },
+    "prerequisite_codes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Course codes that must be completed before this requirement's courses can be attempted. Used to flag a requirement as blocked."
+    },
+    "source_url": {
+      "type": "string",
+      "description": "Official page URL this requirement was discovered from."
+    },
+    "verification_status": {
+      "type": "string",
+      "enum": [
+        "verified",
+        "partial",
+        "pending",
+        "failed"
+      ],
+      "default": "pending",
+      "description": "verified = extracted from an official source with a complete structure; partial = extracted but the official structure was incomplete or inferred; pending = not yet discovered; failed = could not extract. Never mark verified when the requirement was inferred."
+    },
+    "description": {
+      "type": "string"
+    },
+    "sort_order": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "program_id",
+    "group_id",
+    "requirement_type"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

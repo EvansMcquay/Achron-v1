@@ -1,0 +1,152 @@
+{
+  "name": "Institution",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Official institution name"
+    },
+    "display_name": {
+      "type": "string",
+      "description": "Common display name (may differ from the official legal name)"
+    },
+    "short_name": {
+      "type": "string",
+      "description": "Short or common name / alias"
+    },
+    "aliases": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Alternate names, former names, and common aliases used for search matching"
+    },
+    "external_id": {
+      "type": "string",
+      "description": "NCES IPEDS UnitID (stable national identifier) when known"
+    },
+    "city": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string",
+      "description": "Official website URL"
+    },
+    "institution_type": {
+      "type": "string",
+      "enum": [
+        "4-year",
+        "2-year",
+        "less-than-2-year"
+      ],
+      "description": "IPEDS institutional level classification"
+    },
+    "control": {
+      "type": "string",
+      "enum": [
+        "public",
+        "private-not-for-profit",
+        "private-for-profit"
+      ],
+      "description": "IPEDS control / ownership"
+    },
+    "source": {
+      "type": "string",
+      "description": "Provenance source e.g. 'NCES IPEDS (College Navigator)', 'AI discovery (unattributed)', 'admin'"
+    },
+    "source_url": {
+      "type": "string",
+      "description": "URL where this institution record was verified from"
+    },
+    "verification_status": {
+      "type": "string",
+      "enum": [
+        "verified",
+        "pending",
+        "rejected",
+        "inactive"
+      ],
+      "default": "pending",
+      "description": "verified = canonical/authoritative (NCES-attributed or admin-verified); pending = AI-discovered awaiting admin review; rejected = admin declined; inactive = no longer selectable (closed/merged)"
+    },
+    "last_verified": {
+      "type": "string",
+      "format": "date",
+      "description": "Date this record was last verified"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this institution is currently selectable by students"
+    },
+    "discovery_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "crawling",
+        "complete",
+        "partial",
+        "failed",
+        "no_official_source"
+      ],
+      "description": "Completeness of this school's auto-discovered program inventory. pending = discovery not yet attempted; crawling = a discovery run is in progress; complete = the full official inventory was crawled and majors verified with no caps/failures; partial = some programs found but the crawl hit a cap or some detail pages failed (the official catalog was NOT proven exhausted); failed = an official source was found but discovery could not extract reliable programs; no_official_source = no suitable official program/catalog source could be identified. Never mark 'complete' from a single successful page."
+    },
+    "discovered_count": {
+      "type": "number",
+      "description": "Total number of program links discovered from the official programs index during the last discovery run (the school's apparent inventory size)."
+    },
+    "verified_major_count": {
+      "type": "number",
+      "description": "Count of verified degree-granting majors currently stored for this institution."
+    },
+    "non_major_count": {
+      "type": "number",
+      "description": "Count of retained non-majors (concentrations/minors/certificates/tracks/specializations/options) currently stored for this institution, kept for the degree-audit engine but not student-selectable."
+    },
+    "last_discovered_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO timestamp of the last program discovery run for this institution."
+    },
+    "discovery_source_url": {
+      "type": "string",
+      "description": "Official programs index URL used as the discovery source for the last run."
+    }
+  },
+  "required": [
+    "name",
+    "verification_status"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.verification_status": "verified"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

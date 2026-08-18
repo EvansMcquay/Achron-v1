@@ -2,31 +2,101 @@
   "name": "AcademicProfile",
   "type": "object",
   "properties": {
-    "full_name": {"type": "string", "description": "Display name for the student"},
-    "institution_id": {"type": "string", "description": "Authoritative reference to the Institution entity."},
-    "catalog_id": {"type": "string"},
-    "program_id": {"type": "string"},
-    "institution": {"type": "string"},
-    "degree_type": {"type": "string"},
-    "major": {"type": "string"},
-    "minor": {"type": "string"},
-    "catalog_year": {"type": "string"},
-    "degree_start_year": {"type": "string"},
-    "academic_year": {"type": "string"},
-    "current_term": {"type": "string"},
-    "academic_status": {"type": "string"},
-    "credits_completed": {"type": "number"},
-    "credits_required": {"type": "number"},
-    "gpa": {"type": "number"},
-    "expected_graduation": {"type": "string"},
-    "graduation_status": {"type": "string"},
-    "manual_mode": {"type": "boolean", "default": false},
-    "onboarding_complete": {"type": "boolean", "default": false}
+    "full_name": {
+      "type": "string",
+      "description": "Display name for the student"
+    },
+    "institution_id": {
+      "type": "string",
+      "description": "Authoritative reference to the Institution entity. Primary link to the canonical school record. Always required (the school must be verified)."
+    },
+    "catalog_id": {
+      "type": "string",
+      "description": "Authoritative reference to the Catalog entity the student's requirements are bound to. Null in manual/pending mode (school verified, catalog not yet verified). Preserves historical catalog context even when a newer catalog is published."
+    },
+    "program_id": {
+      "type": "string",
+      "description": "Authoritative reference to the Program entity (degree + major) the student is pursuing. Null in manual/pending mode."
+    },
+    "institution": {
+      "type": "string",
+      "description": "Denormalized official institution name (snapshot from Institution entity for display). Kept in sync with institution_id."
+    },
+    "degree_type": {
+      "type": "string",
+      "description": "Denormalized degree type (snapshot from Program entity). Empty in manual/pending mode."
+    },
+    "major": {
+      "type": "string",
+      "description": "Denormalized official program/major name (snapshot from Program entity). Empty in manual/pending mode."
+    },
+    "minor": {
+      "type": "string",
+      "description": "Optional secondary field of study"
+    },
+    "catalog_year": {
+      "type": "string",
+      "description": "Denormalized catalog year (snapshot from Catalog entity) \u2014 the requirements version the student's program is bound to. Determined by the school's verified catalogs. Empty in manual/pending mode."
+    },
+    "degree_start_year": {
+      "type": "string",
+      "description": "Student-reported academic year they began this degree (e.g. 2024-2025). Free selection independent of catalog_year, so transfer students and students following older catalogs can have different start vs catalog years."
+    },
+    "academic_year": {
+      "type": "string",
+      "description": "Authoritative: current academic year e.g. 2026-2027"
+    },
+    "current_term": {
+      "type": "string",
+      "description": "Authoritative: Fall | Spring | Summer"
+    },
+    "academic_status": {
+      "type": "string",
+      "description": "Freshman | Sophomore | Junior | Senior | Graduate | Other"
+    },
+    "credits_completed": {
+      "type": "number",
+      "description": "Authoritative: credits earned toward degree"
+    },
+    "credits_required": {
+      "type": "number",
+      "description": "Authoritative: total credits required for degree"
+    },
+    "gpa": {
+      "type": "number",
+      "description": "Authoritative: grade point average"
+    },
+    "expected_graduation": {
+      "type": "string",
+      "description": "Authoritative: expected graduation term e.g. Spring 2027"
+    },
+    "graduation_status": {
+      "type": "string",
+      "description": "not_started | in_progress | on_track | ready | graduated"
+    },
+    "manual_mode": {
+      "type": "boolean",
+      "default": false,
+      "description": "True when the student's school is verified but its catalog/program is not. The student proceeds with institution bound and program pending; never free-text institution/major."
+    },
+    "onboarding_complete": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the user finished onboarding"
+    }
   },
-  "required": ["institution"],
+  "required": [
+    "institution"
+  ],
   "rls": {
-    "read": {"created_by_id": "{{user.id}}"},
-    "update": {"created_by_id": "{{user.id}}"},
-    "delete": {"created_by_id": "{{user.id}}"}
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
   }
 }

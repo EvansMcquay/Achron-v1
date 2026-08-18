@@ -1,0 +1,98 @@
+{
+  "name": "RequirementGroup",
+  "type": "object",
+  "properties": {
+    "program_id": {
+      "type": "string",
+      "description": "Reference to the Program this group belongs to"
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name e.g. Major Core, General Education, Free Electives, Business Electives, Advanced Courses. Preserves the school's official wording."
+    },
+    "official_name": {
+      "type": "string",
+      "description": "Official group heading as printed by the school (kept separate from the display name)."
+    },
+    "group_type": {
+      "type": "string",
+      "enum": [
+        "core",
+        "general_education",
+        "elective",
+        "capstone",
+        "concentration",
+        "minor",
+        "other"
+      ],
+      "default": "core",
+      "description": "Taxonomy of this requirement group"
+    },
+    "normalized_category": {
+      "type": "string",
+      "description": "Semantic category for display (e.g. business_elective, advanced_course). Preserved from the official wording."
+    },
+    "credits_required": {
+      "type": "number",
+      "description": "Total credits this group requires (optional; used for credit-based groups and overall totals)"
+    },
+    "choose_count": {
+      "type": "number",
+      "description": "For 'choose X' groups: how many of the group's child requirements must be satisfied. Omitted/0 = all child requirements required."
+    },
+    "min_grade": {
+      "type": "string",
+      "description": "Default minimum grade for courses in this group e.g. C. Overridden by a child requirement's own min_grade."
+    },
+    "accept_transfer_credits": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether transfer/AP/CLEP courses may count toward this group. Specific-course requirements still require an accepted equivalency."
+    },
+    "source_url": {
+      "type": "string",
+      "description": "Official page URL this group was discovered from."
+    },
+    "verification_status": {
+      "type": "string",
+      "enum": [
+        "verified",
+        "partial",
+        "pending",
+        "failed"
+      ],
+      "default": "pending",
+      "description": "verified = the group and its requirements were extracted from an official source; partial = incomplete/inferred; pending = not yet discovered; failed = could not extract."
+    },
+    "description": {
+      "type": "string"
+    },
+    "sort_order": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "program_id",
+    "name",
+    "group_type"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

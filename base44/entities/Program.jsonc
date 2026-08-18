@@ -1,0 +1,184 @@
+{
+  "name": "Program",
+  "type": "object",
+  "properties": {
+    "institution_id": {
+      "type": "string",
+      "description": "Reference to the Institution offering this program (denormalized for queries)"
+    },
+    "catalog_id": {
+      "type": "string",
+      "description": "Reference to the Catalog version this program belongs to. Required for officially verified programs; null for national-baseline (IPEDS) programs that have not yet been linked to a verified catalog."
+    },
+    "degree_type": {
+      "type": "string",
+      "description": "Associate, Bachelor, Master, Doctorate, Certificate, Diploma"
+    },
+    "program_name": {
+      "type": "string",
+      "description": "Official offering name as published by the institution (the offering's own name \u2014 e.g. 'Fisheries and Aquatic Biology' for a concentration, or 'Biology' for a major). Preserves the school's exact wording; never renamed."
+    },
+    "display_name": {
+      "type": "string",
+      "description": "Optional friendly display name; defaults to program_name when not set"
+    },
+    "normalized_name": {
+      "type": "string",
+      "description": "Short searchable category used for matching/search only (e.g. 'Information Systems'). Never replaces program_name."
+    },
+    "normalized_category": {
+      "type": "string",
+      "description": "Internal normalized taxonomy category (kept separate from program_name; never replaces the official name)"
+    },
+    "offering_type": {
+      "type": "string",
+      "enum": [
+        "major",
+        "concentration",
+        "minor",
+        "certificate",
+        "track",
+        "specialization",
+        "option",
+        "endorsement",
+        "pre-professional",
+        "other"
+      ],
+      "default": "major",
+      "description": "How this offering is structured, taken from the school's official 'Degrees & Offerings' classification \u2014 NOT the page title. Only 'major' (degree-granting) is selectable in 'What is your major?'. Concentrations, minors, certificates, tracks, specializations, options, endorsements, pre-professional tracks, and other offerings are retained for the requirement structure but never shown as majors."
+    },
+    "official_degree_name": {
+      "type": "string",
+      "description": "Official degree abbreviation as published e.g. B.S.B.A., B.A., B.S., M.S. For a concentration/track/specialization/option, this is the PARENT degree-granting program's degree abbreviation."
+    },
+    "parent_program_name": {
+      "type": "string",
+      "description": "For concentrations/tracks/specializations/options: the degree-granting PARENT program name (e.g. 'Biology' for the 'Fisheries and Aquatic Biology' concentration under 'Biology (B.S.)'). Determined by the school's official 'Degrees & Offerings' classification, not the page title. Empty for majors."
+    },
+    "parent_program_id": {
+      "type": "string",
+      "description": "Resolved reference to the parent Program record (the degree-granting major) for non-major offerings. Empty for majors. Populated after both the non-major and its parent major have been persisted."
+    },
+    "parent_program_source_url": {
+      "type": "string",
+      "description": "URL of the parent degree-granting program page when known."
+    },
+    "source": {
+      "type": "string",
+      "description": "Provenance of this program record. 'IPEDS' = national baseline from NCES/IPEDS program data (verification_status 'national_baseline'); 'official_institution' = verified from the institution's official site/catalog; 'ai_discovery' = AI-suggested, pending admin review; 'admin' = manually added by an admin; 'manual' = student-entered manual major.",
+      "default": "official_institution"
+    },
+    "verification_status": {
+      "type": "string",
+      "enum": [
+        "verified",
+        "national_baseline",
+        "pending",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "verified = confirmed from the institution's official site/catalog (the authoritative layer); national_baseline = reported by national NCES/IPEDS program data, official school verification still pending; pending = AI-discovered/admin-unreviewed; rejected = admin declined. national_baseline is student-visible (with an 'official verification pending' note) but never claims official verification."
+    },
+    "canonical_major": {
+      "type": "string",
+      "description": "Achron canonical major name mapped from the CIP code (e.g. 'Accounting', 'Nursing', 'Computer Science'). Preserved alongside the official program name; used for cross-institution comparison and requirement-template attachment. For national-baseline records this is the primary label; for verified records it is kept in sync with the CIP classification when known."
+    },
+    "cip_code": {
+      "type": "string",
+      "description": "NCES CIP code for this program when known (4-digit, e.g. '5203'). The stable classification layer for matching similar academic programs across institutions. Never discarded after normalization."
+    },
+    "cip_title": {
+      "type": "string",
+      "description": "Official CIP taxonomy title for this program's CIP code (e.g. 'Accounting'). Preserved alongside the school's own program_name; for national-baseline records this is the IPEDS-reported title."
+    },
+    "degree_level": {
+      "type": "string",
+      "enum": [
+        "certificate",
+        "associate",
+        "bachelor",
+        "master",
+        "doctorate"
+      ],
+      "description": "IPEDS/credential degree level preserved where available. A major selector for a bachelor's student must not blindly mix degree levels. For national-baseline records this is derived from the institution's IPEDS level; for verified records it is refined from the official degree abbreviation."
+    },
+    "credits_required": {
+      "type": "number",
+      "description": "Total credits required to complete this program under this catalog"
+    },
+    "external_program_id": {
+      "type": "string",
+      "description": "Stable external identifier for this program when available (e.g. NCES program id)"
+    },
+    "source_url": {
+      "type": "string",
+      "description": "URL where this program was verified from (official institutional source)"
+    },
+    "last_verified": {
+      "type": "string",
+      "format": "date"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    },
+    "requirements_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "partial",
+        "verified",
+        "failed"
+      ],
+      "default": "pending",
+      "description": "Completeness of this program's degree-requirement structure (RequirementGroup/Requirement records). pending = not yet discovered; partial = some requirements discovered but the official structure wasn't proven complete; verified = the full official requirement structure was discovered and stored; failed = an official source was found but requirements could not be extracted. A verified major does NOT imply verified requirements \u2014 track this independently."
+    },
+    "requirements_discovered_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO timestamp of the last program-requirement discovery run."
+    },
+    "requirements_source_url": {
+      "type": "string",
+      "description": "Official page URL used as the source for the last requirement discovery run."
+    }
+  },
+  "required": [
+    "institution_id",
+    "degree_type",
+    "program_name",
+    "verification_status"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.verification_status": "verified"
+        },
+        {
+          "data.verification_status": "national_baseline"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

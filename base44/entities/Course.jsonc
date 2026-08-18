@@ -1,0 +1,103 @@
+{
+  "name": "Course",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Course name"
+    },
+    "code": {
+      "type": "string",
+      "description": "Course code e.g. CS 101"
+    },
+    "course_level": {
+      "type": "string",
+      "description": "Derived course level from the code's numeric part when reliable: '100' | '200' | '300' | '400'. Empty when the code format is ambiguous. Used to identify upper-level/advanced courses for the roadmap."
+    },
+    "credits": {
+      "type": "number",
+      "description": "Credit hours"
+    },
+    "term": {
+      "type": "string",
+      "enum": [
+        "Fall",
+        "Spring",
+        "Summer"
+      ],
+      "description": "Term the course is taken"
+    },
+    "year": {
+      "type": "string",
+      "description": "Calendar year the course term belongs to"
+    },
+    "academic_year": {
+      "type": "string",
+      "description": "Academic year the course belongs to e.g. 2026-2027"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "completed",
+        "in_progress",
+        "planned",
+        "withdrawn",
+        "failed"
+      ],
+      "default": "planned",
+      "description": "Enrollment / outcome status. withdrawn and failed do not satisfy requirements."
+    },
+    "grade": {
+      "type": "string",
+      "description": "Letter grade if completed"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "institutional",
+        "transfer",
+        "transcript",
+        "manual",
+        "ap",
+        "clep"
+      ],
+      "default": "manual",
+      "description": "Provenance of this course record."
+    },
+    "verification_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "verified"
+      ],
+      "default": "verified",
+      "description": "Whether the student confirmed this course record. Separate from extraction confidence."
+    },
+    "extraction_confidence": {
+      "type": "number",
+      "description": "Optional 0.0-1.0 confidence from the document parser."
+    },
+    "equivalency_code": {
+      "type": "string",
+      "description": "For transfer/AP/CLEP/IB courses: the home-institution course code this external course is accepted as equivalent to. Required for a transfer/AP/CLEP course to satisfy a specific-course requirement; otherwise it only counts toward credit pools."
+    },
+    "instructor": {
+      "type": "string",
+      "description": "Optional instructor name"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

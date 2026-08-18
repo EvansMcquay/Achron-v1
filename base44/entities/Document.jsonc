@@ -1,0 +1,62 @@
+{
+  "name": "Document",
+  "type": "object",
+  "properties": {
+    "file_url": {
+      "type": "string",
+      "description": "Public storage URL of the uploaded file"
+    },
+    "file_name": {
+      "type": "string",
+      "description": "Original file name"
+    },
+    "document_type": {
+      "type": "string",
+      "enum": [
+        "transcript",
+        "degree_audit",
+        "other"
+      ],
+      "description": "Kind of academic document"
+    },
+    "mime_type": {
+      "type": "string",
+      "description": "MIME type of the uploaded file"
+    },
+    "file_size": {
+      "type": "number",
+      "description": "File size in bytes"
+    },
+    "extraction_status": {
+      "type": "string",
+      "enum": [
+        "none",
+        "pending",
+        "extracted",
+        "failed"
+      ],
+      "default": "none",
+      "description": "Status of data extraction from this document"
+    },
+    "extracted_data": {
+      "type": "object",
+      "description": "Raw extracted academic data, shown to user for confirmation before saving"
+    }
+  },
+  "required": [
+    "file_url",
+    "file_name",
+    "document_type"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}
